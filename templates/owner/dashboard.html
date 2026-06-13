@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+{% block title %}{% if current_property %}{{ current_property.name }}{% else %}Owner Dashboard{% endif %} — PropFlow{% endblock %}
+{% block page_title %}{% if current_property %}  {% else %}Dashboard{% endif %}{% endblock %}
+
+{% block content %}
+{% if current_property %}
+<div class="property-header">
+  <div class="property-info">
+    <h1>
+      <a href="{{ url_for('owner.property_selection') }}" class="property-title-link" title="Go to property selection">
+        {{ current_property.name }}
+      </a>
+    </h1>
+    <p>{{ current_property.address }}, {{ current_property.city }}, {{ current_property.state }}</p>
+  </div>
+  <div class="property-actions">
+    <a href="{{ url_for('owner.properties') }}" class="btn btn-primary edit-property-btn">Edit Property</a>
+  </div>
+</div>
+<style>
+.property-header {
+  background: linear-gradient(135deg, #f3f4ff 0%, #eff6ff 100%);
+  padding: 14px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(30, 64, 175, 0.08);
+  border: 1px solid #dbeafe;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+title {
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  /* border-bottom: 1px dotted transparent; */
+  color: #1e40af;
+  border-radius: 14px;
+  background-color: #577eb4;
+
+}
+title:hover {
+  text-decoration: none;
+  color: #1e40af;
+  background-color: #4069a1;
+}
+.property-info {
+  width: 100%;
+}
+.property-info h1 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  word-break: break-word;
+}
+.property-info p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+.property-actions {
+  width: 100%;
+}
+.edit-property-btn {
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+}
+.property-title-link {
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px dotted transparent;
+}
+.property-title-link:hover {
+  text-decoration: none;
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+.property-link {
+  text-decoration: none;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+.property-link:hover {
+  text-decoration: none;
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+@media (min-width: 768px) {
+  .property-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px;
+  }
+  .property-info {
+    width: auto;
+    max-width: calc(100% - 190px);
+  }
+  .property-info h1 {
+    font-size: 1.2rem;
+  }
+  .property-info p {
+    font-size: 0.9rem;
+  }
+  .property-actions {
+    width: auto;
+    flex-shrink: 0;
+  }
+  .edit-property-btn {
+    width: auto;
+    min-width: 150px;
+  }
+}
+@media (max-width: 767px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .quick-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+</style>
+{% endif %}
+
+<!-- Stats -->
+<div class="stats-grid">
+  {% if not current_property %}
+  <div class="stat-card"><div class="stat-icon" style="background:var(--c-blue-bg);color:var(--c-blue)">🏠</div><div class="stat-body"><div class="stat-value">{{ stats.total_properties }}</div><div class="stat-label">Properties</div></div></div>
+  {% endif %}
+  <div class="stat-card"><div class="stat-icon" style="background:var(--c-green-bg);color:var(--c-green)">👤</div><div class="stat-body"><div class="stat-value">{{ stats.total_tenants }}</div><div class="stat-label">Tenants</div></div></div>
+  <div class="stat-card"><div class="stat-icon" style="background:var(--c-purple-bg);color:var(--c-purple)">🚪</div><div class="stat-body"><div class="stat-value">{{ stats.total_rooms }}</div><div class="stat-label">Rooms</div></div></div>
+  <div class="stat-card"><div class="stat-icon" style="background:var(--c-yellow-bg);color:var(--c-yellow)">⏳</div><div class="stat-body"><div class="stat-value">{{ stats.pending_payments }}</div><div class="stat-label">Pending</div></div></div>
+  <div class="stat-card"><div class="stat-icon" style="background:var(--c-red-bg);color:var(--c-red)">⚠️</div><div class="stat-body"><div class="stat-value">{{ stats.overdue_payments }}</div><div class="stat-label">Overdue</div></div></div>
+  <div class="stat-card"><div class="stat-icon" style="background:var(--c-green-bg);color:var(--c-green)">💰</div><div class="stat-body"><div class="stat-value">₹{{ "{:,.0f}".format(stats.revenue) }}</div><div class="stat-label">Collected</div></div></div>
+</div>
+
+<!-- Quick actions -->
+<div class="quick-actions">
+  {% if current_property %}
+  <a href="{{ url_for('owner.tenants', property_id=current_property.id) }}"  class="qa-btn"><span>👤</span>Add Tenant</a>
+  <a href="{{ url_for('owner.payments', property_id=current_property.id) }}" class="qa-btn"><span>💳</span>Payments</a>
+  <a href="{{ url_for('rooms.index', property_id=current_property.id) }}"    class="qa-btn"><span>🚪</span>Rooms</a>
+  {% else %}
+  <a href="{{ url_for('owner.tenants') }}"  class="qa-btn"><span>👤</span>Add Tenant</a>
+  <a href="{{ url_for('owner.payments') }}" class="qa-btn"><span>💳</span>Payments</a>
+  <a href="{{ url_for('rooms.index') }}"    class="qa-btn"><span>🚪</span>Rooms</a>
+  <a href="{{ url_for('owner.maintenance', section='overview') }}" class="qa-btn"><span>🛠️</span>Maintenance</a>
+  {% endif %}
+  <a href="{{ url_for('chat.index') }}"     class="qa-btn"><span>💬</span>Message</a>
+  <button onclick="openModal('genRentModal')" class="qa-btn qa-btn-accent"><span>⚡</span>Gen Rent</button>
+</div>
+
+<!-- ----------vacate form neat design-------------------- -->
+
+{% if vacate_pending or vacate_approved %}
+<div class="card" style="margin-bottom:12px; border:none; background:transparent; box-shadow:none;">
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--surface); border-radius:12px; border:1px solid var(--border); transition: 0.2s; cursor:pointer;" onclick="location.href='{{ url_for('owner.vacate_requests') }}'">
+    
+    <div style="display:flex; align-items:center; gap:12px;">
+      <!-- Glowing Icon/DP Style -->
+      <div style="width:40px; height:40px; border-radius:50%; background:var(--c-blue-bg); display:flex; align-items:center; justify-content:center; font-size:20px; position:relative; box-shadow: 0 0 10px rgba(var(--c-blue-rgb), 0.2);">
+        📨
+        {% if vacate_pending %}
+          <!-- Glowing Notification Dot -->
+          <span style="position:absolute; top:0; right:0; width:12px; height:12px; background:#ff4b2b; border:2px solid var(--surface); border-radius:50%; animation: pulse 2s infinite;"></span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <div style="font-weight:600; font-size:14px;">Vacate Notices</div>
+        <div style="font-size:12px; color:var(--text-muted);">
+          {{ vacate_pending|length }} pending request{{ 's' if vacate_pending|length > 1 else '' }}
+        </div>
+      </div>
+    </div>
+
+    <a href="{{ url_for('owner.vacate_requests') }}" style="font-size:13px; font-weight:500; color:var(--c-blue); text-decoration:none;">Manage →</a>
+  </div>
+</div>
+
+<style>
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 75, 43, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0); }
+}
+</style>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- in this like -->
+
+
+<!-- {% if vacate_pending or vacate_approved %}
+<div class="card">
+  <div class="card-header">
+    <h2>📨 Vacate Notices</h2>
+    <a href="{{ url_for('owner.vacate_requests') }}" class="btn btn-ghost btn-sm">Manage →</a>
+  </div>
+  <div class="card-body" style="padding:20px">
+    {% if vacate_pending %}
+      <div class="notice-card" style="margin-bottom:14px; padding:16px; background:var(--surface2); border-radius:var(--radius);">
+        <strong>{{ vacate_pending|length }} pending vacate notice{{ 's' if vacate_pending|length > 1 else '' }}</strong>
+        <p class="text-muted" style="margin:6px 0 0">These requests need owner review to keep vacancy planning on schedule.</p>
+      </div>
+    {% endif %} -->
+    {% if vacate_approved %}
+      <div class="notice-card" style="padding:16px; background:rgba(16,185,129,.08); border-radius:var(--radius);">
+        <strong>{{ vacate_approved|length }} approved vacate{{ 's' if vacate_approved|length > 1 else '' }} coming soon</strong>
+        <p class="text-muted" style="margin:6px 0 0">Keep room availability updated and prepare for move-out.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Monthly payment summary: Who paid / who didn't -->
+<div class="card">
+  <div class="card-header">
+    <h2>💸 Rent Status — {{ target_month }}</h2>
+    <div class="flex gap-8 align-center">
+      <form method="GET">
+        <input type="month" name="month" value="{{ target_month }}"
+               class="form-input" style="padding:5px 10px;width:160px"
+               onchange="this.form.submit()"/>
+      </form>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Tenant</th><th>Phone</th><th>Property</th><th>Room</th><th>Amount</th><th>Status</th><th>Paid At</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for row in pay_summary %}
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar avatar-sm">{{ row.tenant_name[0].upper() }}</div>
+              {{ row.tenant_name }}
+            </div>
+          </td>
+          <td class="text-muted">{{ row.tenant_phone }}</td>
+          <td class="text-muted">
+            {% if row.property_id %}
+              <a href="{{ url_for('owner.property_dashboard', property_id=row.property_id) }}" class="property-link">
+                {{ row.property_name }}
+              </a>
+            {% else %}
+              {{ row.property_name }}
+            {% endif %}
+          </td>
+          <td>{{ row.room_number }}</td>
+          <td><strong>₹{{ "{:,.0f}".format(row.amount) }}</strong></td>
+          <td>
+            {% if row.is_paid %}
+              <span class="badge badge-completed">✅ Paid</span>
+            {% elif row.status == 'overdue' %}
+              <span class="badge badge-overdue">⚠️ Overdue</span>
+            {% elif row.status == 'pending' %}
+              <span class="badge badge-pending">⏳ Pending</span>
+            {% else %}
+              <span class="badge badge-failed">No Record</span>
+            {% endif %}
+          </td>
+          <td class="text-muted">{{ row.paid_at or '—' }}</td>
+          <td>
+            {% if row.payment_id %}
+            <form method="POST" action="{{ url_for('owner.update_payment', pid=row.payment_id) }}" style="display:inline">
+              <input type="hidden" name="status" value="completed"/>
+              <button class="btn btn-primary btn-xs">Mark Paid</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-32">
+          No active tenants found for {{ target_month }}.
+          <button onclick="openModal('genRentModal')" class="btn btn-primary btn-sm" style="margin-left:12px">⚡ Generate Rent</button>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Room occupancy overview -->
+{% if room_data %}
+<div class="card">
+  <div class="card-header">
+    <h2>🚪 Room Overview</h2>
+    <a href="{{ url_for('rooms.index') }}" class="btn btn-ghost btn-sm">Manage →</a>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Room</th><th>Property</th><th>Occupancy</th><th>Paid</th><th>Unpaid</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for rd in room_data %}
+        {% set r = rd.room %}
+        <tr>
+          <td><strong>Room {{ r.room_number }}</strong>{% if r.floor %}<span class="text-muted" style="font-size:11px"> · {{ r.floor }}</span>{% endif %}</td>
+          <td class="text-muted">
+            {% if r.prop %}
+              <a href="{{ url_for('owner.property_dashboard', property_id=r.prop.id) }}" class="property-link">
+                {{ r.prop.name }}
+              </a>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td>
+            <div class="inline-occ-bar">
+              <span>{{ rd.occupancy }}/{{ r.max_capacity }}</span>
+              <div class="mini-bar"><div class="mini-bar-fill" style="width: {{ ((rd.occupancy / r.max_capacity) * 100)|int if r.max_capacity else 0 }}%"></div></div>
+            </div>
+          </td>
+          <td><span class="badge badge-completed">{{ rd.paid_count }}</span></td>
+          <td><span class="badge badge-{% if rd.occupancy - rd.paid_count > 0 %}overdue{% else %}completed{% endif %}">{{ rd.occupancy - rd.paid_count }}</span></td>
+          <td>
+            {% if r.get_is_full() %}<span class="badge badge-pending">Full</span>
+            {% elif rd.occupancy > 0 %}<span class="badge badge-completed">Active</span>
+            {% else %}<span class="badge badge-failed">Empty</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- Recent Payments -->
+<div class="card">
+  <div class="card-header"><h2>Recent Payments</h2><a href="{{ url_for('owner.payments') }}" class="btn btn-ghost btn-sm">View all</a></div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Tenant</th><th>Amount</th><th>Month</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        {% if  stats.total_tenants  !=0 %}
+        {% for p in recent_payments %}
+        <tr>
+          <td>{{ p.tenant.full_name if p.tenant else '—' }}</td>
+          <td><strong>₹{{ "{:,.0f}".format(p.amount) }}</strong></td>
+          <td class="text-muted">{{ p.rent_month or '—' }}</td>
+          <td><span class="badge {% if p.status == 'completed' %}badge-completed{% elif p.status == 'overdue' %}badge-overdue{% else %}badge-pending{% endif %}">{% if p.status == 'completed' %}✅ Paid{% elif p.status == 'overdue' %}⚠️ Overdue{% else %}⏳ Pending{% endif %}</span></td>
+          <td class="text-muted">{{ p.created_at.strftime('%d-%m-%Y') if p.created_at else '—' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-32">No payments</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{%else%}
+<div class="card" style="padding:16px 20px;margin-bottom:16px">
+  <div class="text-muted"> No tenants {{target_month}}</div>
+</div>
+{%endif%}
+
+<!-- Generate Rent Modal -->
+<div id="genRentModal" class="modal-backdrop hidden">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header2"><h3>⚡ Generate Monthly Rent</h3><button onclick="closeModal('genRentModal')">✕</button></div>
+    <form method="POST" action="{{ url_for('owner.generate_rent') }}">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Month</label>
+          <input type="month" name="month" value="{{ target_month }}" class="form-input" required/>
+          <div class="form-hint">Creates pending rent records for all active tenants. Already existing records are skipped.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('genRentModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Generate</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
