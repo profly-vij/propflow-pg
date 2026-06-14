@@ -134,9 +134,8 @@ App runs at `http://localhost:5000`
 
 ## Screenshots
 view all screen shots of pg working
-```
 https://github.com/profly-vij/propflow-pg/issues/1
-```
+
 
 ---
 
