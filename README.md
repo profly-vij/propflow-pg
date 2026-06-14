@@ -133,9 +133,7 @@ App runs at `http://localhost:5000`
 ---
 
 ## Screenshots
-
-> *(Add screenshots here — Owner Dashboard, Tenant Ledger, Chat View, Vacate Form)*
-
+https://github.com/profly-vij/propflow-pg/issues/1
 ```
 Tip: Use Ctrl+Shift+S or Snipping Tool → upload to /static/screenshots/ → link here
 ```
