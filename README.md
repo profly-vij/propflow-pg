@@ -110,7 +110,7 @@ propflow/
 
 ```bash
 # Clone the repo
-git clone https://github.com/vikasvijay246-sys/profly-B.git
+git clone https://github.com/profly-vij/propflow-pg.git
 cd profly-B
 
 # Install dependencies
@@ -165,7 +165,7 @@ Tip: Use Ctrl+Shift+S or Snipping Tool → upload to /static/screenshots/ → li
 ## Author
 
 **M. Vijay Kumar**
-- GitHub: [@vikasvijay246-sys](https://github.com/vikasvijay246-sys)
+- GitHub: [@profly-vij](https://github.com/profly-vij)
 - LinkedIn: [vijay-kumar-murgani](https://linkedin.com/in/vijay-kumar-murgani)
 - Email: vijaykumarmurgani@gmail.com
 
