@@ -17,8 +17,9 @@ from utils.errors import AppError
 from engineio import json as eio_json
 
 log = get_logger(__name__)
-socketio = SocketIO()
+# socketio = SocketIO()
 
+socketio= SocketIO(cors_allowed_origins="*",async_mode="gevent",logger=False, engineio_logger=True)
 
 def create_app(config_class=Config):
     configure_logging("INFO")
@@ -34,7 +35,7 @@ def create_app(config_class=Config):
     socketio.init_app(
         app,
         cors_allowed_origins="*",
-        async_mode="threading",
+        async_mod="gevent",
         logger=False, engineio_logger=False,
         ping_timeout=60, ping_interval=25,
     )
@@ -390,4 +391,4 @@ if __name__ == "__main__":
     debug = os.environ.get("DEBUG", "true").lower() == "true"
     log.info(f"Starting on port {port}", extra={"debug": debug})
     socketio.run(app, host="0.0.0.0", port=port,
-                 debug=debug, allow_unsafe_werkzeug=True)
+                 debug=False, allow_unsafe_werkzeug=True)

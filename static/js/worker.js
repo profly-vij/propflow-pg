@@ -78,15 +78,22 @@
   }
 
   // Socket notifications for logged-in workers
-  if (typeof io !== 'undefined' && document.body.dataset.userId) {
-    const socket = io({ transports: ['websocket', 'polling'] });
-    socket.emit('join_user_room', { user_id: parseInt(document.body.dataset.userId, 10) });
-    socket.on('notification', function (data) {
-      if (banner) {
-        banner.textContent = (data.title || 'New alert') + ': ' + (data.body || '');
-        banner.classList.add('show');
-        setTimeout(() => banner.classList.remove('show'), 5000);
-      }
-    });
+  // if (typeof io !== 'undefined' && document.body.dataset.userId) {
+  //   const socket = io({ transports: ['websocket', 'polling'] });
+  //   socket.emit('join_user_room', { user_id: parseInt(document.body.dataset.userId, 10) });
+//     socket.on('notification', function (data) {
+//       if (banner) {
+//         banner.textContent = (data.title || 'New alert') + ': ' + (data.body || '');
+//         banner.classList.add('show');
+//         setTimeout(() => banner.classList.remove('show'), 5000);
+//       }
+//     });
+//   }
+// })();
+socket.on('notification',function(data){
+  if (banner){
+    banner.textContent=(data.title || 'New aler ')+ ':'+(data.body || '');
+   banner.classLIst.add('show');
+setTimeout(()=> banner.classList.remove('show'),5000);  
   }
-})();
+});

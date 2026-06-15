@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -41,6 +42,14 @@ class Config:
 
     ADMIN_PHONE    = os.environ.get("ADMIN_PHONE",    "admin")
     ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
+    PERMANENT_SESSION_LIFETIME =timedelta(days=30)
+    SESSION_PERMANENT=True
+    SESSION_COOKIE_HTTPNLY=True
+    SESSION_COOKIE_SECURE=not os.environ.get("DEBUG","False").lower() =="true"
+    SESSION_COOKIE_SAMESITE="Lax"
 
+    REMEMBER_COOKIE_DURATION=timedelta(days=30)
+    REMEMBER_COOKIE_SECURE = not os.environ.get("DEBUG","False").lower() == "true"
+    REMEMBER_COOKIE_HTTPNOLY=True
     # Rent auto-generate: day of month to create next month's record
     RENT_GENERATE_DAY = int(os.environ.get("RENT_GENERATE_DAY", 25))

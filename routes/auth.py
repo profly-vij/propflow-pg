@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, User, Worker
+from flask import session
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -42,6 +43,7 @@ def login():
 
         user = _find_user_for_login(phone)
         if user and user.is_active and user.check_password(password):
+            session.permanent = True
             login_user(user, remember=True)
             return redirect(url_for(f"{user.role}.dashboard"))
 
