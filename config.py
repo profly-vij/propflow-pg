@@ -40,7 +40,7 @@ class Config:
         "pdf", "doc", "docx", "xls", "xlsx", "txt", "zip",
     }
 
-    ADMIN_PHONE    = os.environ.get("ADMIN_PHONE",    "admin")
+    ADMIN_PHONE    = os.environ.get("ADMIN_PHONE",    "9876543210")
     ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
     PERMANENT_SESSION_LIFETIME =timedelta(days=30)
     SESSION_PERMANENT=True
