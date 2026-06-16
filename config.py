@@ -15,6 +15,7 @@ class Config:
         "DATABASE_URL",
         f"sqlite:///{os.path.join(BASE_DIR, 'propflow.db')}"
     )
+    print("DATABASE_URL=",DATABASE_URL)
     if DATABASE_URL.startswith("postgres://"):          # Heroku compat
         DATABASE_URL= DATABASE_URL.replace("postgres://", "postgresql://", 1)
     SQLALCHEMY_DATABASE_URI = DATABASE_URL
