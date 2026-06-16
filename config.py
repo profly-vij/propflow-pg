@@ -11,13 +11,13 @@ class Config:
     
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-CHANGE-IN-PRODUCTION")
 
-    _db_url = os.environ.get(
+    DATABASE_URL = os.environ.get(
         "DATABASE_URL",
         f"sqlite:///{os.path.join(BASE_DIR, 'propflow.db')}"
     )
-    if _db_url.startswith("postgres://"):          # Heroku compat
-        _db_url = _db_url.replace("postgres://", "postgresql://", 1)
-    SQLALCHEMY_DATABASE_URI = _db_url
+    if DATABASE_URL.startswith("postgres://"):          # Heroku compat
+        DATABASE_URL= DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Pool settings for PostgreSQL
     SQLALCHEMY_ENGINE_OPTIONS = {
