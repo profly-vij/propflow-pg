@@ -133,7 +133,7 @@ class WorkerTaskService(BaseService):
         paid = db.session.query(db.func.coalesce(db.func.sum(PropertyExpense.amount), 0)).filter(
             PropertyExpense.worker_id == worker_id,
             PropertyExpense.payment_status == "completed",
-            db.func.strftime("%Y-%m", PropertyExpense.expense_date) == month,
+            db.func.to_char(PropertyExpense.expense_date, "YYYY-MM") == month,
         ).scalar() or 0
         pending = db.session.query(db.func.coalesce(db.func.sum(PropertyExpense.amount), 0)).filter(
             PropertyExpense.worker_id == worker_id,

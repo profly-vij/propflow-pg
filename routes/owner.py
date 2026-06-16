@@ -798,7 +798,7 @@ def maintenance():
     expenses_month = float(
         db.session.query(db.func.coalesce(db.func.sum(PropertyExpense.amount), 0))
         .filter(PropertyExpense.owner_id == current_user.id,
-                db.func.strftime("%Y-%m", PropertyExpense.expense_date) == fmt_month())
+                db.func.to_char( PropertyExpense.expense_date,"YYYY-MM") == fmt_month())
         .scalar() or 0
     )
     today = db.func.date(now_utc())
@@ -918,7 +918,7 @@ def worker_dashboard(wid):
         db.session.query(db.func.coalesce(db.func.sum(PropertyExpense.amount), 0))
         .filter(PropertyExpense.owner_id == current_user.id,
                 PropertyExpense.worker_id == worker.id,
-                db.func.strftime("%Y-%m", PropertyExpense.expense_date) == fmt_month())
+                db.func.to_char(PropertyExpense.expense_date,"YYYY-MM") == fmt_month())
         .scalar() or 0
     )
 
