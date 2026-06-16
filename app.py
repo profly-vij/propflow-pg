@@ -384,8 +384,8 @@ def seed(app):
         log.info("Demo accounts: admin/admin123, owner1/owner123, tenant1/tenant123")
 
 
+app  = create_app()
 if __name__ == "__main__":
-    app  = create_app()
     seed(app)
     port  = int(os.environ.get("PORT",  5000))
     debug = os.environ.get("DEBUG", "true").lower() == "true"
